@@ -69,3 +69,16 @@ MG
 
 
 
+//Update v.1
+
+        1) Add your own gemini api, create it on gemini api 
+        2) Will need custom-search-google-engine --> Get it on google cloud console
+
+
+Last edited:
+11:51
+9-11-24
+MG
+
+
+
