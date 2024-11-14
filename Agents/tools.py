@@ -7,15 +7,16 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-
 class writerToolSet():
+    
     def __init__(self):
         pass
+    
     @tool
     def fileReadTool():
         return FileReadTool(
             file_path='template.md',
-            description='A tool to read the story Template file and '
+            description='A tool to read the Story Template file and understand the expected output format.'
         )
     
     @tool
@@ -37,6 +38,9 @@ class writerToolSet():
 
         return output_file
     
-
-    def 
-
+    
+    def tools():
+        return [
+            writerToolSet.fileReadTool,
+            writerToolSet.convermarkdowntopdf
+        ]

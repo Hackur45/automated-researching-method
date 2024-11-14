@@ -3,11 +3,11 @@ from crewai_tools import tool
 from crewai_tools.tools import FileReadTool
 from crewai import LLM
 import os,requests,re,mdpdf,subprocess
-
-    
+from tools import writerToolSet
+ 
+from tools import writerToolSet   
     
 class Agents():
-
     def __init__(self):
         self.llm = LLM(
             model="groq/llama3-8b-8192",
@@ -20,7 +20,8 @@ class Agents():
             role='Story Outliner',
             goal='Develop an outline for a children\'s storybook about Animals, including chapter titles and characters for 5 chapters.',
             backstory="An imaginative creator who lays the foundation of captivating stories for children.",
-            allow_delegation=False
+            allow_delegation=False,
+            verbose=True
         )
     
     def story_writer_agent(self):
@@ -40,7 +41,7 @@ class Agents():
                     backstory='A meticulous formatter who enhances the readability and presentation of the storybook.',
                     verbose=True,
                     llm=self.llm,
-                    tools=[file_read_tool],
+                    tools=[writerToolSet.tools()],
                     allow_delegation=False
                 )
 
@@ -50,7 +51,7 @@ class Agents():
                     goal='Convert the Markdown file to a PDF document. story.md is the markdown file name.',
                     backstory='An efficient converter that transforms Markdown files into professionally formatted PDF documents.',
                     verbose=True,
-                    llm=llm,
-                    tools=[convermarkdowntopdf],
+                    llm=self.llm,
+                    tools=[writerToolSet.tools()],
                     allow_delegation=False
                 )
