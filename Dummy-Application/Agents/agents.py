@@ -15,7 +15,7 @@ class Agents:
             api_key=os.environ.get("GROQ_API_KEY")
         )
     
-    def questioning_agent(self):
+    """ def questioning_agent(self):
         return Agent(
             llm=self.llm,
             role='Questioner',
@@ -24,7 +24,7 @@ class Agents:
       
             allow_delegation=False,
             verbose=False
-        )
+        ) """
     
     def research_agent(self, user_question: str):
         return Agent(
@@ -57,7 +57,5 @@ class Agents:
         )
     
     # todo: add a agent that can store the final pdf docs to a faiss data base for a particular user so that we can add memeory to general caht bot 
-    
-    
     
     

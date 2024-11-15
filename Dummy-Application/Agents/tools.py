@@ -5,6 +5,33 @@ from dotenv import load_dotenv
 
 load_dotenv()
 class WriterToolSet:
+    
+    
+    
+    """ @tool
+    def process_interaction(self,user_claim):
+        # Store initial claim and response
+        conversation_memory={
+            "initial_claim":user_claim,
+            "initial_response":"",
+            "counter_question":[],
+            "user_answers":[]
+        }
+        
+        initial_response=self.provide_response(user_claim=user_claim)
+        conversation_memory['initial_response']=initial_response
+        
+        for i in range(3):            
+            pass
+    
+     """
+    
+    
+    def process_tool():
+        pass
+    
+    
+     
     @staticmethod
     @tool
     def fileReadTool():
