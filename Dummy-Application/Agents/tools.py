@@ -36,17 +36,17 @@ class WriterToolSet:
     @tool
     def fileReadTool():
         """
-        Reads the Story Template file and understands the expected output format.
-        This tool is used to process the template file for story generation.
+        Reads the Resarch  Template file and understand the expected output format.
+        This tool is used to process the template file for latex resarch generation.
         """
         return FileReadTool(
             file_path='template.md',
-            description='A tool to read the Story Template file and understand the expected output format.'
+            description='A tool to read the Resarch  Template file and understand the expected output format.'
         )
 
     @staticmethod
     @tool
-    def convermarkdowntopdf(markdownfile_name: str) -> str:
+    def convermarkdowntolatex(markdownfile_name: str) -> str:
         """
         Converts a Markdown file to a PDF document using the mdpdf command line application.
 
