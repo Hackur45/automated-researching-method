@@ -21,6 +21,7 @@ class Agents:
             role='Questioner',
             goal="Counter-question the user based on previous answers (max 3 questions).",
             backstory="You are a researcher who analyzes questions and challenges assumptions through counter-questions.",
+      
             allow_delegation=False,
             verbose=False
         )
