@@ -29,7 +29,7 @@ class Agents:
         return Agent(
             llm=self.llm,
             role='Researcher',
-            goal=f"Conduct thorough research on the question: '{user_question}' and summarize findings.",
+            goal=f"Conduct thorough research on the question and summarize findings: '{user_question}' ",
             backstory="You are a researcher who performs in-depth research to provide accurate answers.",
             allow_delegation=False,
             verbose=False
@@ -55,6 +55,8 @@ class Agents:
             verbose=False
         )
     
-    # todo: add a agent that can store the final pdf docs to a fiass data base for a particular user so that we can add memeory to general caht bot 
+    # todo: add a agent that can store the final pdf docs to a faiss data base for a particular user so that we can add memeory to general caht bot 
+    
+    
     
     
