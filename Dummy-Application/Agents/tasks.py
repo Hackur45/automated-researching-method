@@ -16,15 +16,15 @@ class Tasks:
             expected_output="A complete manuscript of the children's storybook about Animals with 5 chapters. Each chapter should contain approximately 100 words, following the provided outline and integrating the characters and plot points into a cohesive narrative.",
         )
 
-    def task_format_content(self, agent, context=None):
-        return Task(
-            description="Format the story content in markdown, including an image at the beginning of each chapter.",
-            agent=agent,
-            expected_output="The entire storybook content formatted in markdown, with each chapter title followed by the corresponding image and the chapter content.",
-            context=context,
-            output_file="story.md",
-        )
-
+    """  def task_convert_(self, agent, context=None):
+            return Task(
+                description="Format the story content in markdown, including an image at the beginning of each chapter.",
+                agent=agent,
+                expected_output="The entire storybook content formatted in markdown, with each chapter title followed by the corresponding image and the chapter content.",
+                context=context,
+                output_file="story.md",
+            )
+    """
     def task_convert_Latex(self, agent):
         return Task(
             description="Convert a Markdown file to a PDF document, ensuring the preservation of formatting, structure, and embedded images using the mdpdf library.",

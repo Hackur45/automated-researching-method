@@ -2,6 +2,10 @@ from crewai_tools import tool
 from crewai_tools.tools import FileReadTool
 import os,requests,re,mdpdf,subprocess
 from dotenv import load_dotenv
+import pypandoc
+import pandoc
+import re
+from pathlib import Path
 
 load_dotenv()
 class WriterToolSet:
@@ -26,42 +30,43 @@ class WriterToolSet:
     
      """
     
-    
-    def process_tool():
-        pass
-    
-    
      
     @staticmethod
     @tool
-    def fileReadTool():
+    def latex_writer_tool(self,resarch_latex_code,file_name:str,output_directory):
+        
         """
-        Reads the Resarch  Template file and understand the expected output format.
-        This tool is used to process the template file for latex resarch generation.
-        """
-        return FileReadTool(
-            file_path='template.md',
-            description='A tool to read the Resarch  Template file and understand the expected output format.'
-        )
-
-    @staticmethod
-    @tool
-    def convermarkdowntolatex(markdownfile_name: str) -> str:
-        """
-        Converts a Markdown file to a PDF document using the mdpdf command line application.
+        Processes and writes LaTeX content to a .tex file.
 
         Args:
-            markdownfile_name (str): Path to the input Markdown file.
+            resarch_latex (str): The LaTeX content to write into the file.
+            file_name (str): The name of the research document.
 
         Returns:
-            str: Path to the generated PDF file.
+            str: Success or error message.
         """
-        output_file = os.path.splitext(markdownfile_name)[0] + '.pdf'
-        cmd = ['mdpdf', '--output', output_file, markdownfile_name]
 
-        subprocess.run(cmd, check=True)
+        # clean the name 
+        file_name= re.sub(r"[^\w\s]","",file_name) 
+        file_name=file_name.lower().replace(" ","_")+'.pdf'
+        
+        
+        try:
+            self.convert_latex_to_pdf(resarch_latex_code,file_name,output_directory)
+        except Exception as e:
+            return f"Error while creating the file: {str(e)}"
+    
+    
+    def convert_latex_to_pdf(self,latex_code,file_name,output_directory):
+        
+        pass
+    
+    @staticmethod
+    @tool
+    def store_pdf_to_vector_db():
+        pass
 
-        return output_file
+
 
     @staticmethod
     def tools():

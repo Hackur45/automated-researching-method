@@ -14,8 +14,9 @@ class Agents:
             model=os.getenv("MODEL_NAME"),
             api_key=os.environ.get("GROQ_API_KEY")
         )
-    
-    """ def questioning_agent(self):
+        
+    # this agent will question  the user and take his her queries 
+    def questioning_agent(self):
         return Agent(
             llm=self.llm,
             role='Questioner',
@@ -24,8 +25,9 @@ class Agents:
       
             allow_delegation=False,
             verbose=False
-        ) """
-    
+        )     
+        
+    # this agent will do the resarch and provide a raw format data from the web etc 
     def research_agent(self, user_question: str):
         return Agent(
             llm=self.llm,
@@ -36,18 +38,8 @@ class Agents:
             tools='',
             verbose=False
         )
-    
-    def convert_md_agent(self, research_output: str):
-        return Agent(
-            llm=self.llm,
-            role='Mark Down  Formatter',
-            goal=f"Format the research output  to markdown : '{research_output}' ",
-            backstory="You are a markdown  formatter specialized in converting research content into markdown format.",
-            allow_delegation=False,
-            tools='',
-            verbose=False
-        )
-    
+        
+    # this agent will  convert the unstructured resarch of the resarch agent to a latex format and convert to pdf 
     def latex_converter_agent(self, markdown_file_name: str):
         return Agent(
             llm=self.llm,
@@ -58,6 +50,8 @@ class Agents:
             verbose=False,
             tools=''
         )
+    
+
     
     # todo: add a agent that can store the final pdf docs to a faiss data base for a particular user so that we can add memeory to general caht bot 
     
