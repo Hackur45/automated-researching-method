@@ -2,16 +2,13 @@ from crewai_tools import tool
 from crewai_tools.tools import FileReadTool
 import os,requests,re,mdpdf,subprocess
 from dotenv import load_dotenv
-import pypandoc
-import pandoc
 import re
-from pathlib import Path
+import urllib, urllib.request
 
 load_dotenv()
 class WriterToolSet:
     
-    
-    
+    # for questioning agent 
     """ @tool
     def process_interaction(self,user_claim):
         # Store initial claim and response
@@ -29,8 +26,28 @@ class WriterToolSet:
             pass
     
      """
+     
+    @tool
+    def arxiv_resarch_tool():
+        # will use arxiv api 
+        
+        pass 
+    
+    @tool
+    def web_search_tool(query):
+        # will use mostly crew ai tools 
+        pass
+    
     
      
+    def resarch_tools():
+        pass
+     
+     
+     
+     
+    
+    # for latex writer 
     @staticmethod
     @tool
     def latex_writer_tool(self,resarch_latex_code,file_name:str,output_directory):
@@ -52,15 +69,22 @@ class WriterToolSet:
         
         
         try:
-            self.convert_latex_to_pdf(resarch_latex_code,file_name,output_directory)
+            with open(file_name,'w') as file:
+                file.write(resarch_latex_code)
         except Exception as e:
             return f"Error while creating the file: {str(e)}"
     
-    
-    def convert_latex_to_pdf(self,latex_code,file_name,output_directory):
-        
+    # for latex  to pdf 
+    def convert_latex_to_pdf(self,latex_file_name):
+        """returns a pdf file with latex written 
+
+        Args:
+            latex_file_name (_type_): _description_
+        """
         pass
     
+    
+    # for resarch storer
     @staticmethod
     @tool
     def store_pdf_to_vector_db():
