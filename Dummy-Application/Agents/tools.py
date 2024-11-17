@@ -6,7 +6,13 @@ import re
 import urllib.request as libreq
 from bs4 import BeautifulSoup
 from urllib.parse import quote
-
+import PyPDF2
+import io
+from searchtools import ExaSearchToolset
+from langchain_community.document_loaders import PyPDFLoader
+from langchain_community.embeddings import HuggingFaceBgeEmbeddings
+from langchain_text_splitters.character import CharacterTextSplitter
+from langchain_community.vectorstores import FAISS
 load_dotenv()
 
 
@@ -119,17 +125,94 @@ class WriterToolSet:
             return data
         except Exception as e:
             return f"Error occurred: {str(e)}"
-
+    
     @tool
-    def web_search_tool(query):
+    def load_document(self,file_path_url):
+        """_summary_
+
+        Args:
+            file_path_url (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        try:
+            response=requests.get(file_path_url)
+            response.raise_for_status() # Raise an exception for bad status codes
+            
+            pdf_file_obj=io.BytesIO(response.content)
+            
+            pdf_reader=PyPDF2.PdfReader(pdf_file_obj)
+            
+            text=""
+            
+            num_pages=min(2,len(pdf_reader.pages))
+            
+            for page_num in range(num_pages):
+                text+=pdf_reader.pages[page_num].extract_text()
+
+            return text
+        except requests.RequestException as e:
+            print(f"Error occured:{e}")
+            return None
+        except Exception as e:
+            print(f"Error occured in processing of pdf:{e}")
+            return None 
+    
+        
+    @tool
+    def load_document_to_vector_db(self, vector_db: FAISS, research_paper_path):
+        """_summary_
+
+        Args:
+            vector_db (FAISS): _description_
+            research_paper_path (_type_): _description_
+
+        Returns:
+            _type_: _description_
+        """
+        try:
+            # Create loader
+            loader = PyPDFLoader(research_paper_path)
+            
+            # Load documents
+            documents = loader.load()
+            
+            # Create embeddings
+            embeddings = HuggingFaceBgeEmbeddings()
+            
+            # Create text splitter
+            text_splitter = CharacterTextSplitter(
+                separator='\n',
+                chunk_size=500,
+                chunk_overlap=200
+            )
+            
+            # Split documents
+            doc_chunks = text_splitter.split_documents(documents)
+            
+            # Add to vector db
+            vector_db.add_documents(doc_chunks, embeddings)
+            
+            return documents
+            
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return None
+    
+    
+    @tool
+    def web_search_tools():
         """_summary_
 
         Args:
             query (_type_): _description_
         """
-        # will use mostly crew ai tools
-        pass
+        return ExaSearchToolset.tools()
 
+    
+    
+    
     # for latex writer
     @staticmethod
     @tool
@@ -147,7 +230,7 @@ class WriterToolSet:
 
         # clean the name
         file_name = re.sub(r"[^\w\s]", "", file_name)
-        file_name = file_name.lower().replace(" ", "_") + ".pdf"
+        file_name = file_name.lower().replace(" ", "_") + ".tex"
 
         try:
             with open(file_name, "w") as file:
@@ -163,15 +246,6 @@ class WriterToolSet:
             latex_file_name (_type_): _description_
         """
         pass
-
-    # for resarch storer
-    @staticmethod
-    @tool
-    def store_pdf_to_vector_db():
-        """_summary_
-        """
-        pass
-
     @staticmethod
     def tools():
         """_summary_
