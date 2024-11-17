@@ -1,42 +1,26 @@
-from crewai_tools import tool, RagTool
+from crewai_tools import tool
 from crewai_tools.tools import FileReadTool
-import os, requests, re, mdpdf, subprocess
-from dotenv import load_dotenv
+import os
+import subprocess
+import requests
 import re
 import urllib.request as libreq
 from bs4 import BeautifulSoup
 from urllib.parse import quote
 import PyPDF2
 import io
-from searchtools import ExaSearchToolset
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_text_splitters.character import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS
+
+from dotenv import load_dotenv
+from searchtools import ExaSearchToolset
+
 load_dotenv()
 
 
-class WriterToolSet:
-
-    # for questioning agent
-    """@tool
-    def process_interaction(self,user_claim):
-        # Store initial claim and response
-        conversation_memory={
-            "initial_claim":user_claim,
-            "initial_response":"",
-            "counter_question":[],
-            "user_answers":[]
-        }
-
-        initial_response=self.provide_response(user_claim=user_claim)
-        conversation_memory['initial_response']=initial_response
-
-        for i in range(3):
-            pass
-
-    """
-
+class ResearcherToolSet:
     # resarcher tools
     @tool
     def arxiv_research_tool(
@@ -202,21 +186,18 @@ class WriterToolSet:
     
     
     @tool
-    def web_search_tools():
+    def web_search_tools(self):
         """_summary_
 
         Args:
             query (_type_): _description_
         """
         return ExaSearchToolset.tools()
-
     
+     # for latex writer
     
-    
-    # for latex writer
-    @staticmethod
     @tool
-    def latex_writer_tool(self, resarch_latex_code, file_name: str, output_directory):
+    def latex_writer_tool( resarch_latex_code, file_name: str):
         """
         Processes and writes LaTeX content to a .tex file.
 
@@ -227,7 +208,6 @@ class WriterToolSet:
         Returns:
             str: Success or error message.
         """
-
         # clean the name
         file_name = re.sub(r"[^\w\s]", "", file_name)
         file_name = file_name.lower().replace(" ", "_") + ".tex"
@@ -238,22 +218,88 @@ class WriterToolSet:
         except Exception as e:
             return f"Error while creating the file: {str(e)}"
 
+
     # for latex  to pdf
-    def convert_latex_to_pdf(self, latex_file_name):
+    @tool
+    def convert_latex_to_pdf(self, latex_file_name,output_directory="Your Resarchers"):
         """returns a pdf file with latex written
 
         Args:
             latex_file_name (_type_): _description_
         """
-        pass
-    @staticmethod
-    def tools():
-        """_summary_
+        if not os.path.exists(latex_file_name):
+            print(f"Error: File '{latex_file_name}' not found .")
+            return None
+        
+        
+        try:
+            pdflatex_path= subprocess.check_output(['where','pdflatex'],
+                                                   stderr=subprocess.STDOUT,
+                                                   text=True
+                                                   )
+            print(f"Found pdflatex at: {pdflatex_path}")
+        except subprocess.CalledProcessError:
+            print("Error : Could not find pdflatex in PATH")
+            print("\nCurrent PATH environment:")
+            print(os.environ.get('PATH','').replace(';','\n'))
+            return None
+        #non stop mode stops from any manual input given between the compilation 
+        if  output_directory:
+            os.makedirs(output_directory,exist_ok=True)
+            command=[
+                'pdflatex',
+                '-interaction=nonstopmode',
+                '-output-directory',
+                output_directory,
+                latex_file_name
+            ]
+        else:
+            command=[
+                'pdflatex',
+                '-interaction=nonstopmode',
+                latex_file_name
+            ]
+        
+        try:
+            print(f"Attempting to run command: {' '.join(command)}")
+             
+            result= subprocess.run(
+                command,
+                stdout=subprocess.PIPE,
+                stderr=subprocess.PIPE,
+                text=True,
+                check=False)
+            
+            if result.stderr:
+                print("\nError Output :")
+                print(result.stderr)
+                
+            
+            if result.returncode==0:
+                print("PDF compiled successfully!")
+                pdf_file=os.path.splitext(os.path.basename(latex_file_name))[0]+".pdf"
+                return os.path.join(output_directory or ".",pdf_file)
+            else:
+                print("Compilation failed")
+                print(result.stderr)
+        except FileNotFoundError:
+            print( "File not found")
+            return NotImplemented
 
-        Returns:
-            _type_: _description_
-        """
-        return [
-            WriterToolSet.fileReadTool,  # Return the callable tool function
-            WriterToolSet.convermarkdowntopdf,  # Return the callable tool function
+    def latex_conver_tools(): 
+        return[
+            ResarcherToolSet.convert_latex_to_pdf,
+            ResarcherToolSet.latex_writer_tool
+        ]   
+    
+    def resarch_tools():
+        return[
+            ResarcherToolSet.arxiv_research_tool,
+            ResarcherToolSet.web_search_tools,
+            ResarcherToolSet.load_document,
+        ]
+        
+    def storage_tools():
+        return[
+            ResarcherToolSet.load_document_to_vector_db
         ]

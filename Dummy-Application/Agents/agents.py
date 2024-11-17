@@ -38,9 +38,22 @@ class Agents:
             tools='',
             verbose=False
         )
-        
+    
+    
+    def resarch_sumarizer_agent(self,: dict):
+        return Agent(
+            llm=self.llm,
+            role='Resarch Summarizer',
+            goal="Convert the cluttered resarch into a summaried format which can be converted   to LaTeX code",
+            backstory="You are an expert in converting cluttered resarch  into  strucutred and summarized format for research papers.",
+            allow_delegation=False,
+            verbose=False,
+            tools=''
+        )
+    
+    
     # this agent will  convert the unstructured resarch of the resarch agent to a latex format and convert to pdf 
-    def latex_converter_agent(self, markdown_file_name: str):
+    def latex_converter_and_pdf_store_agent(self,: str):
         return Agent(
             llm=self.llm,
             role='LaTeX Converter',

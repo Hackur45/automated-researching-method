@@ -1,6 +1,7 @@
 import os
 from exa_py import Exa
 from crewai_tools import tool
+
 class ExaSearchToolset():
   @tool
   def search(query: str):
