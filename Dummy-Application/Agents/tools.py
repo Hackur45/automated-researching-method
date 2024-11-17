@@ -288,18 +288,18 @@ class ResearcherToolSet:
 
     def latex_conver_tools(): 
         return[
-            ResarcherToolSet.convert_latex_to_pdf,
-            ResarcherToolSet.latex_writer_tool
+            ResearcherToolSet.convert_latex_to_pdf,
+            ResearcherToolSet.latex_writer_tool
         ]   
     
     def resarch_tools():
         return[
-            ResarcherToolSet.arxiv_research_tool,
-            ResarcherToolSet.web_search_tools,
-            ResarcherToolSet.load_document,
+            ResearcherToolSet.arxiv_research_tool,
+            ResearcherToolSet.web_search_tools,
+            ResearcherToolSet.load_document,
         ]
         
-    def storage_tools():
+    """ def storage_tools():
         return[
-            ResarcherToolSet.load_document_to_vector_db
-        ]
+            ResearcherToolSet.load_document_to_vector_db
+        ] """
