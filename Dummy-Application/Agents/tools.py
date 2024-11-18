@@ -9,13 +9,15 @@ from bs4 import BeautifulSoup
 from urllib.parse import quote
 import PyPDF2
 import io
+
+
+""" 
 from langchain_community.document_loaders import PyPDFLoader
 from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_text_splitters.character import CharacterTextSplitter
-from langchain_community.vectorstores import FAISS
+from langchain_community.vectorstores import FAISS """
 
 from dotenv import load_dotenv
-from searchtools import ExaSearchToolset
 
 load_dotenv()
 
@@ -143,59 +145,41 @@ class ResearcherToolSet:
             print(f"Error occured in processing of pdf:{e}")
             return None 
     
-        
     @tool
-    def load_document_to_vector_db(self, vector_db: FAISS, research_paper_path):
-        """_summary_
-
-        Args:
-            vector_db (FAISS): _description_
-            research_paper_path (_type_): _description_
-
-        Returns:
-            _type_: _description_
+    def search(query: str):
+        """Search for a webpage based on the query."""
+        return ResearcherToolSet._exa().search(f"{query}", use_autoprompt=True, num_results=3)
+    
+    @tool
+    def find_similar(url: str):
+        """Search for webpages similar to a given URL.
+        The url passed in should be a URL returned from `search`.
         """
-        try:
-            # Create loader
-            loader = PyPDFLoader(research_paper_path)
-            
-            # Load documents
-            documents = loader.load()
-            
-            # Create embeddings
-            embeddings = HuggingFaceBgeEmbeddings()
-            
-            # Create text splitter
-            text_splitter = CharacterTextSplitter(
-                separator='\n',
-                chunk_size=500,
-                chunk_overlap=200
-            )
-            
-            # Split documents
-            doc_chunks = text_splitter.split_documents(documents)
-            
-            # Add to vector db
-            vector_db.add_documents(doc_chunks, embeddings)
-            
-            return documents
-            
-        except Exception as e:
-            print(f"Error occurred: {e}")
-            return None
-    
-    
+        return ResearcherToolSet._exa().find_similar(url, num_results=3)
+
     @tool
+    def get_contents(ids: str):
+        """Get the contents of a webpage.
+        The ids must be passed in as a list, a list of ids returned from `search`.
+        """
+        ids = eval(ids)
+
+        contents = str(ResearcherToolSet._exa().get_contents(ids))
+        contents = contents.split("URL:")
+        contents = [content[:1000] for content in contents]
+        return "\n\n".join(contents)
+        
+ 
+    """ @tool
     def web_search_tools(self):
-        """_summary_
+        _summary_
 
         Args:
             query (_type_): _description_
-        """
-        return ExaSearchToolset.tools()
+       
+        return ResearcherToolSet.tools() """
     
      # for latex writer
-    
     @tool
     def latex_writer_tool( resarch_latex_code, file_name: str):
         """
@@ -295,11 +279,56 @@ class ResearcherToolSet:
     def resarch_tools():
         return[
             ResearcherToolSet.arxiv_research_tool,
-            ResearcherToolSet.web_search_tools,
-            ResearcherToolSet.load_document,
+            ResearcherToolSet.load_document,    
+            ResearcherToolSet.search,
+            ResearcherToolSet.find_similar,
+            ResearcherToolSet.get_contents
         ]
         
     """ def storage_tools():
         return[
             ResearcherToolSet.load_document_to_vector_db
         ] """
+        
+        
+    """ @tool
+    def load_document_to_vector_db(self, vector_db: FAISS, research_paper_path):
+        _summary_
+
+        Args:
+            vector_db (FAISS): _description_
+            research_paper_path (_type_): _description_
+
+        Returns:
+            _type_: _description_
+       
+        try:
+            # Create loader
+            loader = PyPDFLoader(research_paper_path)
+            
+            # Load documents
+            documents = loader.load()
+            
+            # Create embeddings
+            embeddings = HuggingFaceBgeEmbeddings()
+            
+            # Create text splitter
+            text_splitter = CharacterTextSplitter(
+                separator='\n',
+                chunk_size=500,
+                chunk_overlap=200
+            )
+            
+            # Split documents
+            doc_chunks = text_splitter.split_documents(documents)
+            
+            # Add to vector db
+            vector_db.add_documents(doc_chunks, embeddings)
+            
+            return documents
+            
+        except Exception as e:
+            print(f"Error occurred: {e}")
+            return None
+    
+     """
