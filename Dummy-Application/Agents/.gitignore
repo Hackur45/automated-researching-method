@@ -2,3 +2,8 @@
 __pycache__
 .env
 mdpdf.log
+
+check.py
+trail.tex
+document.tex
+output

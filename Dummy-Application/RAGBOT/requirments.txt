@@ -1,0 +1,14 @@
+python-dotenv==1.0.1
+langchain-community==0.2.10
+langchain-text-splitters==0.2.2
+langchain-groq==0.1.9
+faiss-cpu
+transformers==4.43.3
+sentence-transformers==3.0.1
+nltk==3.8.1
+flask
+flask_cors
+werkzeug
+python-dotenv
+jsonify
+PyPDF2
