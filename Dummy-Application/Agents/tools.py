@@ -17,12 +17,38 @@ from langchain_community.embeddings import HuggingFaceBgeEmbeddings
 from langchain_text_splitters.character import CharacterTextSplitter
 from langchain_community.vectorstores import FAISS """
 
+from langchain_groq import ChatGroq
 from dotenv import load_dotenv
 
 load_dotenv()
 
 
 class ResearcherToolSet:
+    @tool
+    def process_interation(user_question):
+        """_summary_
+
+        Returns:
+            _type_: _description_
+        """        
+        llm = ChatGroq(
+            model="llama3-8b-8192",
+            temperature=0
+        )
+        
+        doct={
+            "user_question":"",
+            "answer_question":""
+        }
+        
+        for i in range(3):
+            llm    
+        
+        
+            
+        
+        
+        
     # resarcher tools
     @tool
     def arxiv_research_tool(

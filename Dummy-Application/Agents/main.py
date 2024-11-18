@@ -55,7 +55,6 @@ def main():
                 agent=research_summarizer_agent,
                 resarch_outcomes=''# Will be populated by previous task
                 ),
-            
             # 4th Task: Convert to LaTeX
             tasks.task_convert_Latex(
                 agent=latex_converter_agent,
@@ -69,10 +68,8 @@ def main():
                 latex_file_name=initial_topic.replace(" ", "_")
             )
         ],
-        process='sequential',
-        memory=True,
-        max_rpm=10,
-        full_output=True
+        process="sequential",
+        
     )
     
     # Execute research paper generation workflow

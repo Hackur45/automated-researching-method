@@ -16,7 +16,7 @@ class Agents:
             api_key=os.environ.get("GROQ_API_KEY")
         )
         
-    # In agents.py, modify agent configurations
+    # this agent will question  the user and take his her queries 
     def questioning_agent(self):
         return Agent(
             llm=self.llm,
@@ -24,12 +24,8 @@ class Agents:
             goal="Counter-question the user based on previous answers (max 3 questions).",
             backstory="You are a researcher who analyzes questions and challenges assumptions through counter-questions.",
             allow_delegation=False,
-            verbose=True,  # Turn on verbose for better debugging
-            output_format="""Thought: [reasoning about the task]
-    Action: [tool to use or direct response]
-    Final Answer: [comprehensive answer meeting task requirements]""",
-            max_iterations=3  # Limit iterations to prevent infinite loops
-        )  
+            verbose=False
+        )     
         
     # this agent will do the resarch and provide a raw format data from the web etc 
     def research_agent(self ):
